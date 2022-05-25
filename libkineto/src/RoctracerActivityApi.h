@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <deque>
 #include <atomic>
+#include <mutex>
 
 #ifdef HAS_ROCTRACER
 #define __HIP_PLATFORM_AMD__
