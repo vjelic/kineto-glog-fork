@@ -205,7 +205,9 @@ void CuptiActivityProfiler::processTraceInternal(ActivityLogger& logger) {
 #ifdef HAS_ROCTRACER
   if (!cpuOnly_) {
     VLOG(0) << "Retrieving GPU activity buffers";
-    const int count = cupti_.processActivities(logger);
+    const int count = cupti_.processActivities(
+        logger,
+        std::bind(&CuptiActivityProfiler::cpuActivity, this, std::placeholders::_1));
     LOG(INFO) << "Processed " << count << " GPU records";
     LOGGER_OBSERVER_ADD_EVENT_COUNT(count);
   }
@@ -521,6 +523,11 @@ void CuptiActivityProfiler::handleCuptiActivity(const CUpti_Activity* record, Ac
   }
 }
 #endif // HAS_CUPTI
+
+const ITraceActivity* CuptiActivityProfiler::cpuActivity(int32_t correlationId) {
+    const auto& it2 = activityMap_.find(correlationId);
+    return (it2 != activityMap_.end()) ? it2->second : nullptr;
+}
 
 void CuptiActivityProfiler::configureChildProfilers() {
   // If child profilers are enabled create profiler sessions

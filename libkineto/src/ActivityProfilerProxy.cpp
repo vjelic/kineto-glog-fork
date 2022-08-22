@@ -7,6 +7,9 @@
 #include "CuptiActivityApi.h"
 #include "Logger.h"
 #include <chrono>
+#ifdef HAS_ROCTRACER
+#include "RoctracerActivityApi.h"
+#endif
 
 namespace KINETO_NAMESPACE {
 
@@ -80,11 +83,20 @@ bool ActivityProfilerProxy::isActive() {
 void ActivityProfilerProxy::pushCorrelationId(uint64_t id) {
   CuptiActivityApi::pushCorrelationID(id,
     CuptiActivityApi::CorrelationFlowType::Default);
+#ifdef HAS_ROCTRACER
+  // FIXME: bad design here
+  RoctracerActivityApi::pushCorrelationID(id,
+    RoctracerActivityApi::CorrelationFlowType::Default);
+#endif
 }
 
 void ActivityProfilerProxy::popCorrelationId() {
   CuptiActivityApi::popCorrelationID(
     CuptiActivityApi::CorrelationFlowType::Default);
+#ifdef HAS_ROCTRACER
+  RoctracerActivityApi::popCorrelationID(
+    RoctracerActivityApi::CorrelationFlowType::Default);
+#endif
 }
 
 void ActivityProfilerProxy::pushUserCorrelationId(uint64_t id) {
