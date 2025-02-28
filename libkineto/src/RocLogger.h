@@ -21,7 +21,6 @@
 
 #include <hip/hip_runtime_api.h>
 
-
 namespace libkineto {
 class RocprofActivityApi;
 }
@@ -46,6 +45,7 @@ enum CorrelationDomain {
 class ApiIdList {
  public:
   ApiIdList();
+  virtual ~ApiIdList() {}
   bool invertMode() {
     return invert_;
   }

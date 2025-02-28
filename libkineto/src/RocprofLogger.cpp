@@ -444,7 +444,6 @@ class Flush {
     }
   }
 };
-static Flush s_flush;
 
 RocprofLogger& RocprofLogger::singleton() {
   static RocprofLogger instance;
@@ -628,8 +627,8 @@ void RocprofLogger::api_callback(rocprofiler_callback_tracing_record_t record, r
       auto &info = dispatch.dispatch_info;
 
       // Lookup the stream and apiname from the enclosing hip call.
-      //  These are not provided in the dispatch record 
-      hipStream_t stream;
+      //  These are not provided in the dispatch record
+      hipStream_t stream = 0;
       auto kind = record.kind;
       auto operation = record.operation;
       if (s->kernelargs.count(record.correlation_id.internal) > 0) {
