@@ -265,6 +265,10 @@ RocprofLoggerShared& RocprofLoggerShared::singleton() {
 std::vector<rocprofiler_agent_v0_t> get_gpu_device_agents() {
   std::vector<rocprofiler_agent_v0_t> agents;
 
+  const char *fname = "/sys/class/kfd/kfd/topology/nodes";
+  if (access(fname, F_OK) != 0)
+      return agents;
+
   // Callback used by rocprofiler_query_available_agents to return
   // agents on the device. This can include CPU agents as well. We
   // select GPU agents only (i.e. type == ROCPROFILER_AGENT_TYPE_GPU)
